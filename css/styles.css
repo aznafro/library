@@ -29,13 +29,14 @@ body {
 	            5px 0 10px rgba(0, 0, 0, 0.3), -5px 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.heading {
+.header {
 	display: flex;
 	flex-direction: column;
 }
 
-.header {
+.header__text {
 	color: #fff;
+	margin-bottom: 30px;
 }
 
 /**********************************
@@ -85,7 +86,7 @@ body {
 
 .input-box {
 	margin-bottom: 0;
-	padding: 12px;
+	padding: 5px 12px;
 }
 
 .form-input {
@@ -107,6 +108,10 @@ body {
 .btn-add:hover {
 	background-color: steelblue;
 	border: 7px solid transparent;
+}
+
+.container-add-book textarea {
+	margin-bottom: 25px;
 }
 
 .form {
@@ -159,6 +164,76 @@ body {
 	font-size: 14px;
 }
 
+.fa-ellipsis-h {
+	float: right;
+}
+
+.fa-ellipsis-h:hover {
+	cursor: pointer;
+}
+
+.extra-info-bar {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.menu-box {
+	position: relative;
+	width: 200px;
+}
+
+.menu {
+	position: absolute;
+	background-color: steelblue;
+	top: 50%;
+	right: 0;
+	height: 0;
+	overflow: hidden;
+	transition: height .2s;
+}
+
+.menu-show {
+	height: 110px;
+}
+
+.nav-link {
+	color: #fff;
+	text-align: right;
+}
+
+.nav-link:hover {
+	cursor: pointer;
+}
+
+.nav-item:hover {
+	background-color: unset;
+}
+
+/*****************************
+		REMOVE BOOK
+*****************************/
+.remove-container {
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	color: #fff;
+	border-radius: 5px;
+	border: 10px solid #fff;
+	padding: 20px 30px;
+	z-index: 3;
+}
+
+.remove__text {
+	margin-bottom: 40px;
+}
+
+.remove__btn {
+	width: 100%;
+}
+
 /*****************************
 		BLUR SCREEN
 *****************************/
@@ -196,9 +271,13 @@ body {
 		text-align: left;
 	}
 
-	.heading {
+	.header {
 		flex-direction: row;
 		justify-content: space-between;
+	}
+
+	.header__text {
+		margin-bottom: 0;
 	}
 
 	.btn-add {

@@ -16,11 +16,27 @@
 	
 </div>
 
+<div class="remove-container hidden">
+	<span class="x">
+		X
+	</span>
+	<h3 class="remove__header">Remove Book</h3>
+	<p class="remove__text">Are you sure you want to remove </p>
+	<div class="row">
+		<div class="track-1-2">
+			<button class="btn remove__btn remove__confirm">Yes</button>
+		</div>
+		<div class="track-1-2">
+			<button class="btn remove__btn remove__cancel">No</button>
+		</div>
+	</div>
+</div>
+
 <header>
 	<div class="container">
 		<div class="add-book-bar clearfix">
-			<div class="heading">
-				<h1 class="header">Kwonsonian Library</h1>
+			<div class="header">
+				<h1 class="header__text">Kwonsonian Library</h1>
 				<button class="btn btn-add">Add Book</button>
 			</div>
 			<div class="container-add-book hidden">
@@ -45,8 +61,8 @@
 					</div>
 					<div class="input-box">
 						<textarea class="form-input" name="synopsis" placeholder="Synopsis" required></textarea>
+						<button class="btn add-book">Add Book</button>
 					</div>
-					<button class="btn add-book">Add Book</button>
 				</form>
 			</div>
 		</div>
