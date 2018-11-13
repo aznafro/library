@@ -191,8 +191,8 @@ body {
 .x {
 	float: left;
 	padding: 5px;
+	font-size: 35px;
 	color: steelblue;
-	font-weight: bold;
 }
 
 .x:hover {
