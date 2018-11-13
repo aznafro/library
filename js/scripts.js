@@ -16,7 +16,7 @@ Book.prototype.toggleRead = function() {
 
 let id = 0;
 let bookObjects = [
-	new Book(id++, "The Hobbit 1", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and comes back after finding out something terrible has happened."),
+	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and comes back after finding out something terrible has happened."),
 	new Book(id++, "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", 799, "Not Read", "Harry Potter finds out he's a wizard and goes to Hogwarts! There he meets new friends, enemies and the ultimate evil tied to his past!"),
 	new Book(id++, "Fahrenheit 451", "Ray Bradbury", 198, "Read", "Citizen digs deep and finds out what the dystopian society is all about."),
 	new Book(id++, "Brave New World", "Aldus Huxley", 240, "Not Read", "Another dystopian society, or is it?"),
