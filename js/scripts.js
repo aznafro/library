@@ -8,13 +8,19 @@ function Book(id, title, author, pages, read, synopsis) {
 	this.synopsis = synopsis;
 }
 
+Book.prototype.toggleRead = function() {
+	if(this.read == "Read") {
+		this.read = "have not read";
+	}
+};
+
 let id = 0;
 let bookObjects = [
-	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit", "J.R.R. Tolkien", 259, "read", "A hobbit goes on an adventure and come back after finding out something terrible has happened.")
+	new Book(id++, "The Hobbit 1", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
+	new Book(id++, "The Hobbit 2", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
+	new Book(id++, "The Hobbit 3", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
+	new Book(id++, "The Hobbit 4", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
+	new Book(id++, "The Hobbit 5", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened.")
 ];
 
 /**
@@ -23,8 +29,8 @@ let bookObjects = [
 
 **/
 let addButton = document.querySelector(".btn-add");
-let addBookContainer = document.querySelector(".container-add-book");
-let booksContainer = document.querySelector(".container-books");
+let addBookContainer = document.querySelector(".add-container");
+let booksContainer = document.querySelector(".books-container");
 let header = document.querySelector(".header");
 let screen = document.querySelector(".screen");
 addButton.addEventListener("click", function() {
@@ -32,7 +38,7 @@ addButton.addEventListener("click", function() {
 });
 
 // all the cancel buttons
-document.querySelector(".container-add-book .x").addEventListener("click", function() {
+addBookContainer.querySelector(".x").addEventListener("click", function() {
 	hideContainer(addBookContainer);
 });
 
@@ -100,7 +106,7 @@ function renderHelper(book, index) {
 												"<ul>" +
 													"<li class=\"nav-item\"><a class=\"nav-link mark-read\">Mark As Read</a></li>" +
 													"<li class=\"nav-item\"><a class=\"nav-link remove\">Remove</a></li>" +
-													"<li class=\"nav-item\"><a class=\"nav-link edit\">Edit</a></li>" +
+													"<li class=\"nav-item\"><a class=\"nav-link update\">Update</a></li>" +
 												"</ul>" +
 											"</div>" + 
 										"</div>" +
@@ -136,6 +142,24 @@ function unblur() {
 	header.classList.remove("blur");
 }
 
+let removeText = removeContainer.querySelector(".remove__text");
+let removeConfirm = removeContainer.querySelector(".remove__confirm");
+
+let currentBookEl = null;
+function remove() {
+	// update model
+	let index = bookObjects.find(({ id }) => id == currentBookEl.getAttribute("data-id"));
+	bookObjects.splice(index, 1);
+
+	// update view
+	currentBookEl.remove();
+
+	hideContainer(removeContainer);
+}
+
+// attach remove confirm event listener
+removeConfirm.addEventListener("click", remove);
+
 function hookUpBook(bookEl) {
 	// toggle menu button
 	bookEl.querySelector(".fa-ellipsis-h").addEventListener("click", function() {
@@ -145,32 +169,90 @@ function hookUpBook(bookEl) {
 	// delete
 	bookEl.querySelector(".remove").addEventListener("click", function() {
 		let title = bookEl.querySelector(".title").textContent;
-		removeContainer.querySelector(".remove__text").textContent += "'" + title + "'?";
+		removeText.textContent = "Are you sure you want to remove '" + title + "'?";
 
-		removeContainer.querySelector(".remove__confirm").addEventListener("click", function() {
-			bookEl.remove();
-			
-			for(let i=0; i < bookObjects.length; i++) {
-				if(bookObjects[i].id == bookEl.getAttribute("data-id")) {
-					bookObjects.splice(i, 1);
-					break;
-				}
-			}
-
-			hideContainer(removeContainer);
-		});
+		// set the book to be deleted
+		currentBookEl = bookEl;
 
 		showContainer(removeContainer);
 
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
+	// update
+	bookEl.querySelector(".update").addEventListener("click", function() {
+		let bookTitle = bookEl.querySelector(".title");
+		let bookAuthor = bookEl.querySelector(".author");
+		let bookPages = bookEl.querySelector(".pages");
+		let bookRead = bookEl.querySelector(".read");
+		let bookSynopsis = bookEl.querySelector(".synopsis");
 
+		document.body.innerHTML += "<div class=\"update-container\">" + 
+										"<span class=\"x\">" +
+											"X" +
+										"</span>" +
+		 								"<h3 class=\"update__header\">Update Book</h3>" +
+										"<form class=\"update__form\" action=\"\">" +
+											"<div class=\"track-1-2 input-box\">" +
+												"<input class=\"form-input\" type=\"text\" name=\"title\" placeholder=\"Title\" value=\"" + bookTitle.textContent + "\" required>" +
+											"</div>" +
+											"<div class=\"track-1-2 input-box\">" +
+												"<input class=\"form-input\" type=\"text\" name=\"author\" placeholder=\"Author\" value=\"" + bookAuthor.textContent + "\" required>" +
+											"</div>" +
+											"<div class=\"row\">" +
+												"<div class=\"track-1-2 input-box\">" +
+													"<input class=\"form-input\" type=\"number\" name=\"pages\" value=\"" + bookPages.textContent.split(" ")[0] + "\" placeholder=\"Pages\">" +
+												"</div>" +
+												"<div class=\"track-1-2 input-box\">" +
+													"<input class=\"form-input\" type=\"text\" name=\"read\" value=\"" + bookRead.textContent + "\" placeholder=\"Read?\">" +
+												"</div>" +
+											"</div>" +
+											"<div class=\"input-box\">" +
+												"<textarea class=\"form-input\" name=\"synopsis\" placeholder=\"Synopsis\" required>" + bookSynopsis.textContent + "</textarea>" +
+												"<button class=\"btn btn-form update__confirm\">Update</button>" +
+											"</div>" +
+										"</form>" +
+									"</div>";
 
-	// edit
-	bookEl.querySelector(".edit").addEventListener("click", function() {
-		console.log("EDIT!");
+		// prevent form from updating page
+		let updateContainer = document.querySelector(".update-container");
+		let form = updateContainer.querySelector(".update__form");
+		form.addEventListener("submit", function(e) {
+			e.preventDefault();
 
+			let book;
+			for(let i=0; i < bookObjects.length; i++) {
+				book = bookObjects[i];
+				if(book.id == bookEl.getAttribute("data-id")) {
+					break;
+				}
+			};
+
+			// save values in our data structure
+			book.title = updateContainer.querySelector("[name=\"title\"]").value;
+			book.author = updateContainer.querySelector("[name=\"author\"]").value;
+			book.pages = updateContainer.querySelector("[name=\"pages\"]").value;
+			book.read = updateContainer.querySelector("[name=\"read\"]").value;
+			book.synopsis = updateContainer.querySelector("[name=\"synopsis\"]").value;
+
+			// update our view from our data structure
+			bookTitle.textContent = book.title;
+			bookAuthor.textContent = book.author;
+			bookPages.textContent = book.pages + "pgs";
+			bookRead.textContent = book.read;
+			bookSynopsis.textContent = book.synopsis;
+
+			updateContainer.remove();
+			unblur();
+		});
+
+		// add event listeners to the buttons in the update container
+		updateContainer.querySelector(".x").addEventListener("click", function() {
+			updateContainer.remove();
+			unblur();
+		});
+
+		blur();
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
