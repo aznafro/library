@@ -16,11 +16,11 @@ Book.prototype.toggleRead = function() {
 
 let id = 0;
 let bookObjects = [
-	new Book(id++, "The Hobbit 1", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit 2", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit 3", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit 4", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened."),
-	new Book(id++, "The Hobbit 5", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and come back after finding out something terrible has happened.")
+	new Book(id++, "The Hobbit 1", "J.R.R. Tolkien", 259, "Read", "A hobbit goes on an adventure and comes back after finding out something terrible has happened."),
+	new Book(id++, "Harry Potter and the Sorcerer's Stone", "J.K. Rowling", 799, "Not Read", "Harry Potter finds out he's a wizard and goes to Hogwarts! There he meets new friends, enemies and the ultimate evil tied to his past!"),
+	new Book(id++, "Fahrenheit 451", "Ray Bradbury", 198, "Read", "Citizen digs deep and finds out what the dystopian society is all about."),
+	new Book(id++, "Brave New World", "Aldus Huxley", 240, "Not Read", "Another dystopian society, or is it?"),
+	new Book(id++, "Animal House", "George Orwell", 190, "Read", "Not all is as it seems, as the weary farm animals seek to dismantle the tyranny of their farmers.")
 ];
 
 /**
@@ -29,17 +29,24 @@ let bookObjects = [
 
 **/
 let addButton = document.querySelector(".btn-add");
-let addBookContainer = document.querySelector(".add-container");
+let addContainer = document.querySelector(".add-container");
 let booksContainer = document.querySelector(".books-container");
 let header = document.querySelector(".header");
 let screen = document.querySelector(".screen");
 addButton.addEventListener("click", function() {
-	showContainer(addBookContainer);
+	showContainer(addContainer);
+});
+
+// if you click anywhere else on the screen, hide all the menus
+document.body.addEventListener("click", function() {
+	document.querySelectorAll(".menu-show").forEach(function(menu) {
+		menu.classList.remove("menu-show");
+	});
 });
 
 // all the cancel buttons
-addBookContainer.querySelector(".x").addEventListener("click", function() {
-	hideContainer(addBookContainer);
+addContainer.querySelector(".x").addEventListener("click", function() {
+	hideContainer(addContainer);
 });
 
 let removeContainer = document.querySelector(".remove-container");
@@ -62,29 +69,34 @@ removeNo.addEventListener("click", function() {
 			ADD BOOK
 
 *****************************/
-let addBook = document.querySelector(".add-book");
-let addTitle = document.querySelector("[name=\"title\"]");
-let addAuthor = document.querySelector("[name=\"author\"]");
-let addPages = document.querySelector("[name=\"pages\"]");
-let addRead = document.querySelector("[name=\"read\"]");
-let addSynopsis = document.querySelector("[name=\"synopsis\"]");
-addBook.addEventListener("click", function() {
+let addTitle = addContainer.querySelector("[name=\"title\"]");
+let addAuthor = addContainer.querySelector("[name=\"author\"]");
+let addPages = addContainer.querySelector("[name=\"pages\"]");
+let addSynopsis = addContainer.querySelector("[name=\"synopsis\"]");
+
+// prevent form from refreshing the page
+let form = addContainer.querySelector(".form");
+form.addEventListener("submit", function(e) {
+	e.preventDefault();
+
+	let addRead = addContainer.querySelector("[type=\"radio\"]:checked");
 	let newBook = new Book(id++, 
 							addTitle.value, 
 							addAuthor.value, 
 							addPages.value,
 							addRead.value,
 							addSynopsis.value);
+
+	addTitle.value = "";
+	addAuthor.value = "";
+	addPages.value = "";
+	document.querySelector(".add-container [value=\"Not Read\"]").checked = true;
+	addSynopsis.value = "";
+
 	bookObjects.push(newBook);
 	renderHelper(newBook, bookObjects.length - 1);
 	hookUpBook(document.querySelector("[data-id=\"" + (id-1) + "\"]"));
-	hideContainer(addBookContainer);
-});
-
-// prevent form from refreshing the page
-let form = document.querySelector(".form");
-form.addEventListener("submit", function(e) {
-	e.preventDefault();
+	hideContainer(addContainer);
 });
 
 // Render Books into list
@@ -113,9 +125,8 @@ function renderHelper(book, index) {
 											"<i class=\"fas fa-ellipsis-h\"></i>" + 
 											"<div class=\"menu\">" +
 												"<ul>" +
-													"<li class=\"nav-item\"><a class=\"nav-link mark-read\">Mark As Read</a></li>" +
-													"<li class=\"nav-item\"><a class=\"nav-link remove\">Remove</a></li>" +
 													"<li class=\"nav-item\"><a class=\"nav-link update\">Update</a></li>" +
+													"<li class=\"nav-item\"><a class=\"nav-link remove\">Remove</a></li>" +
 												"</ul>" +
 											"</div>" + 
 										"</div>" +
@@ -156,7 +167,7 @@ function unblur() {
 		REMOVE BOOK
 
 ************************/
-let removeText = removeContainer.querySelector(".remove__text");
+let removeText = removeContainer.querySelector(".action__text");
 let removeConfirm = removeContainer.querySelector(".remove__confirm");
 
 let currentBookEl = null;
@@ -208,7 +219,8 @@ updateConfirm.addEventListener("click", update);
 
 function hookUpBook(bookEl) {
 	// toggle menu button
-	bookEl.querySelector(".fa-ellipsis-h").addEventListener("click", function() {
+	bookEl.querySelector(".fa-ellipsis-h").addEventListener("click", function(e) {
+		e.stopPropagation();
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
@@ -222,7 +234,7 @@ function hookUpBook(bookEl) {
 
 		// show remove container
 		showContainer(removeContainer);
-		bookEl.querySelector(".menu").classList.toggle("menu-show");
+		bookEl.querySelector(".menu").classList.remove("menu-show");
 	});
 
 	// update
@@ -245,14 +257,7 @@ function hookUpBook(bookEl) {
 
 		// show update container
 		showContainer(updateContainer);
-		bookEl.querySelector(".menu").classList.toggle("menu-show");
-	});
-
-	// mark as read
-	bookEl.querySelector(".mark-read").addEventListener("click", function() {
-		console.log("MARK AS READ!");
-
-		bookEl.querySelector(".menu").classList.toggle("menu-show");
+		bookEl.querySelector(".menu").classList.remove("menu-show");
 	});
 }
 

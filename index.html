@@ -20,14 +20,14 @@
 	<span class="x">
 		X
 	</span>
-	<h3 class="remove__header">Remove Book</h3>
-	<p class="remove__text"></p>
+	<h3 class="action__header">Remove Book</h3>
+	<p class="action__text"></p>
 	<div class="row">
 		<div class="track-1-2">
-			<button class="btn remove__btn remove__confirm">Yes</button>
+			<button class="btn btn-form remove__confirm">Yes</button>
 		</div>
 		<div class="track-1-2">
-			<button class="btn remove__btn remove__cancel">No</button>
+			<button class="btn btn-form remove__cancel">No</button>
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 	<span class="x">
 		X
 	</span>
-	<h3 class="update__header">Update Book</h3>
+	<h3 class="action__header">Update Book</h3>
 	<form class="form" action="">
 		<div class="track-1-2 input-box">
 			<input class="form-input" type="text" name="title" placeholder="Title" required>
@@ -49,7 +49,12 @@
 				<input class="form-input" type="number" name="pages" placeholder="Pages">
 			</div>
 			<div class="track-1-2 input-box">
-				<input class="form-input" type="text" name="read" placeholder="Read?">
+				<label class="radio-label">
+					<input class="form-input" type="radio" name="read" value="Read"> Read
+				</label>
+				<label class="radio-label">
+					<input class="form-input" type="radio" name="read" value="Not Read" checked> Not Read
+				</label>
 			</div>
 		</div>
 		<div class="input-box">
@@ -59,38 +64,44 @@
 	</form>
 </div>
 
+<div class="add-container hidden">
+	<span class="x">
+		X
+	</span>
+	<h3 class="action__header">Add New Book</h3>
+	<form class="form form-add" action="">
+		<div class="track-1-2 input-box">
+			<input class="form-input" type="text" name="title" placeholder="Title" required>
+		</div>
+		<div class="track-1-2 input-box">
+			<input class="form-input" type="text" name="author" placeholder="Author" required>
+		</div>
+		<div class="row">
+			<div class="track-1-2 input-box">
+				<input class="form-input" type="number" name="pages" placeholder="Pages">
+			</div>
+			<div class="track-1-2 input-box">
+				<label class="radio-label">
+					<input class="form-input" type="radio" name="read" value="Read"> Read
+				</label>
+				<label class="radio-label">
+					<input class="form-input" type="radio" name="read" value="Not Read" checked> Not Read
+				</label>
+			</div>
+		</div>
+		<div class="input-box">
+			<textarea class="form-input" name="synopsis" placeholder="Synopsis" required></textarea>
+			<button type="submit" class="btn btn-form add-book">Add Book</button>
+		</div>
+	</form>
+</div>
+
 <header>
 	<div class="container">
 		<div class="add-book-bar clearfix">
 			<div class="header">
-				<h1 class="header__text">Kwonsonian Library</h1>
+				<h1 class="header__text"><a href="#"><span class="kwonsonian">Kwonsonian</span> Library</a></h1>
 				<button class="btn btn-add">Add Book</button>
-			</div>
-			<div class="add-container hidden">
-				<span class="x">
-					X
-				</span>
-				<h3>Add New Book</h3>
-				<form class="form" action="">
-					<div class="track-1-2 input-box">
-						<input class="form-input" type="text" name="title" placeholder="Title" required>
-					</div>
-					<div class="track-1-2 input-box">
-						<input class="form-input" type="text" name="author" placeholder="Author" required>
-					</div>
-					<div class="row">
-						<div class="track-1-2 input-box">
-							<input class="form-input" type="number" name="pages" placeholder="Pages">
-						</div>
-						<div class="track-1-2 input-box">
-							<input class="form-input" type="text" name="read" placeholder="Read?">
-						</div>
-					</div>
-					<div class="input-box">
-						<textarea class="form-input" name="synopsis" placeholder="Synopsis" required></textarea>
-						<button class="btn btn-form add-book">Add Book</button>
-					</div>
-				</form>
 			</div>
 		</div>
 	</div>
