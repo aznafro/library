@@ -47,25 +47,34 @@ removeContainer.querySelector(".x").addEventListener("click", function() {
 	hideContainer(removeContainer);
 });
 
+let updateContainer = document.querySelector(".update-container");
+updateContainer.querySelector(".x").addEventListener("click", function() {
+	hideContainer(updateContainer);
+});
+
 let removeNo = document.querySelector(".remove__cancel");
 removeNo.addEventListener("click", function() {
 	hideContainer(removeContainer);
 });
 
-// Add Book
+/*****************************
+
+			ADD BOOK
+
+*****************************/
 let addBook = document.querySelector(".add-book");
-let inputTitle = document.querySelector("[name=\"title\"]");
-let inputAuthor = document.querySelector("[name=\"author\"]");
-let inputPages = document.querySelector("[name=\"pages\"]");
-let inputRead = document.querySelector("[name=\"read\"]");
-let inputSynopsis = document.querySelector("[name=\"synopsis\"]");
+let addTitle = document.querySelector("[name=\"title\"]");
+let addAuthor = document.querySelector("[name=\"author\"]");
+let addPages = document.querySelector("[name=\"pages\"]");
+let addRead = document.querySelector("[name=\"read\"]");
+let addSynopsis = document.querySelector("[name=\"synopsis\"]");
 addBook.addEventListener("click", function() {
 	let newBook = new Book(id++, 
-							inputTitle.value, 
-							inputAuthor.value, 
-							inputPages.value,
-							inputRead.value,
-							inputSynopsis.value);
+							addTitle.value, 
+							addAuthor.value, 
+							addPages.value,
+							addRead.value,
+							addSynopsis.value);
 	bookObjects.push(newBook);
 	renderHelper(newBook, bookObjects.length - 1);
 	hookUpBook(document.querySelector("[data-id=\"" + (id-1) + "\"]"));
@@ -142,6 +151,11 @@ function unblur() {
 	header.classList.remove("blur");
 }
 
+/************************
+
+		REMOVE BOOK
+
+************************/
 let removeText = removeContainer.querySelector(".remove__text");
 let removeConfirm = removeContainer.querySelector(".remove__confirm");
 
@@ -156,9 +170,41 @@ function remove() {
 
 	hideContainer(removeContainer);
 }
-
-// attach remove confirm event listener
 removeConfirm.addEventListener("click", remove);
+
+/**************************
+
+		UPDATE BOOK
+
+***************************/
+let updateTitle = updateContainer.querySelector("[name=\"title\"]");
+let updateAuthor = updateContainer.querySelector("[name=\"author\"]");
+let updatePages = updateContainer.querySelector("[name=\"pages\"]");
+let updateRead = updateContainer.querySelector("[name=\"read\"]");
+let updateSynopsis = updateContainer.querySelector("[name=\"synopsis\"]");
+let updateConfirm = updateContainer.querySelector(".update__confirm");
+
+function update() {
+	let book = bookObjects.find(({ id }) => id == currentBookEl.getAttribute("data-id"));
+	
+	// update model
+	book.title = updateTitle.value;
+	book.author = updateAuthor.value;
+	book.pages = updatePages.value;
+	book.read = updateRead.value;
+	book.synopsis = updateSynopsis.textContent;
+
+	// update view
+	currentBookEl.querySelector(".title").textContent = book.title;
+	currentBookEl.querySelector(".author").textContent = book.author;
+	currentBookEl.querySelector(".pages").textContent = book.pages + " pgs";
+	currentBookEl.querySelector(".read").textContent = book.read;
+	currentBookEl.querySelector(".synopsis").textContent = book.synopsis;
+
+	hideContainer(updateContainer);
+}
+
+updateConfirm.addEventListener("click", update);
 
 function hookUpBook(bookEl) {
 	// toggle menu button
@@ -174,85 +220,31 @@ function hookUpBook(bookEl) {
 		// set the book to be deleted
 		currentBookEl = bookEl;
 
+		// show remove container
 		showContainer(removeContainer);
-
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
 	// update
 	bookEl.querySelector(".update").addEventListener("click", function() {
-		let bookTitle = bookEl.querySelector(".title");
-		let bookAuthor = bookEl.querySelector(".author");
-		let bookPages = bookEl.querySelector(".pages");
-		let bookRead = bookEl.querySelector(".read");
-		let bookSynopsis = bookEl.querySelector(".synopsis");
 
-		document.body.innerHTML += "<div class=\"update-container\">" + 
-										"<span class=\"x\">" +
-											"X" +
-										"</span>" +
-		 								"<h3 class=\"update__header\">Update Book</h3>" +
-										"<form class=\"update__form\" action=\"\">" +
-											"<div class=\"track-1-2 input-box\">" +
-												"<input class=\"form-input\" type=\"text\" name=\"title\" placeholder=\"Title\" value=\"" + bookTitle.textContent + "\" required>" +
-											"</div>" +
-											"<div class=\"track-1-2 input-box\">" +
-												"<input class=\"form-input\" type=\"text\" name=\"author\" placeholder=\"Author\" value=\"" + bookAuthor.textContent + "\" required>" +
-											"</div>" +
-											"<div class=\"row\">" +
-												"<div class=\"track-1-2 input-box\">" +
-													"<input class=\"form-input\" type=\"number\" name=\"pages\" value=\"" + bookPages.textContent.split(" ")[0] + "\" placeholder=\"Pages\">" +
-												"</div>" +
-												"<div class=\"track-1-2 input-box\">" +
-													"<input class=\"form-input\" type=\"text\" name=\"read\" value=\"" + bookRead.textContent + "\" placeholder=\"Read?\">" +
-												"</div>" +
-											"</div>" +
-											"<div class=\"input-box\">" +
-												"<textarea class=\"form-input\" name=\"synopsis\" placeholder=\"Synopsis\" required>" + bookSynopsis.textContent + "</textarea>" +
-												"<button class=\"btn btn-form update__confirm\">Update</button>" +
-											"</div>" +
-										"</form>" +
-									"</div>";
+		// set bookelement to be updated
+		currentBookEl = bookEl;
+		
+		// initialize container input values
+		updateTitle.value = bookEl.querySelector(".title").textContent;
+		updateAuthor.value = bookEl.querySelector(".author").textContent;
 
-		// prevent form from updating page
-		let updateContainer = document.querySelector(".update-container");
-		let form = updateContainer.querySelector(".update__form");
-		form.addEventListener("submit", function(e) {
-			e.preventDefault();
+		let pages = bookEl.querySelector(".pages").textContent;
+		if(pages) {
+			updatePages.value = pages.split(" ")[0];
+		}		
 
-			let book;
-			for(let i=0; i < bookObjects.length; i++) {
-				book = bookObjects[i];
-				if(book.id == bookEl.getAttribute("data-id")) {
-					break;
-				}
-			};
+		updateRead.value = bookEl.querySelector(".read").textContent;
+		updateSynopsis.textContent = bookEl.querySelector(".synopsis").textContent;
 
-			// save values in our data structure
-			book.title = updateContainer.querySelector("[name=\"title\"]").value;
-			book.author = updateContainer.querySelector("[name=\"author\"]").value;
-			book.pages = updateContainer.querySelector("[name=\"pages\"]").value;
-			book.read = updateContainer.querySelector("[name=\"read\"]").value;
-			book.synopsis = updateContainer.querySelector("[name=\"synopsis\"]").value;
-
-			// update our view from our data structure
-			bookTitle.textContent = book.title;
-			bookAuthor.textContent = book.author;
-			bookPages.textContent = book.pages + "pgs";
-			bookRead.textContent = book.read;
-			bookSynopsis.textContent = book.synopsis;
-
-			updateContainer.remove();
-			unblur();
-		});
-
-		// add event listeners to the buttons in the update container
-		updateContainer.querySelector(".x").addEventListener("click", function() {
-			updateContainer.remove();
-			unblur();
-		});
-
-		blur();
+		// show update container
+		showContainer(updateContainer);
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
