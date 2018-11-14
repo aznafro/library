@@ -1,8 +1,8 @@
 # Javascript Library App
 
-A small library project from 'The Odin Project'. This app makes use of Javascript objects as well as data attributes to add, edit, and remove Books to and from the Kwonsonian Library.
+A small library project from 'The Odin Project'. This app makes use of Javascript objects as well as data attributes to add, edit, and remove Books to and from the Kwonsonian Library. I am using Firebase for the backend database.
 
-Some things I learned coding this project:
+Something I learned coding this project:
 
 - It is possible to add multiple event listeners to an element.
 	- I found this out through a mistake, when trying to remove/update a Book- multiple Books were being removed in one click.
