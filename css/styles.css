@@ -69,7 +69,7 @@ body {
 .add-container,
 .remove-container,
 .update-container {
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	color: #fff;
 	z-index: 3;
@@ -184,6 +184,7 @@ body {
 .add-container textarea,
 .update-container textarea {
 	margin-bottom: 25px;
+	height: 150px;
 }
 
 .form {
@@ -210,6 +211,8 @@ body {
 	border: 1px solid lightgray;
 	padding: 15px;
 	color: lightgray;
+	opacity: 0; 
+	animation: .7s fadeIn linear forwards; 
 }
 
 .book:hover .title {
@@ -331,7 +334,24 @@ body {
 }
 
 /******************************
+
+		ANIMATIONS
+
+******************************/
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+/******************************
+
 		MEDIA QUERIES
+
 ******************************/
 @media only screen and (min-width: 768px) {
 	.title {
