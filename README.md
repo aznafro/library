@@ -1,6 +1,6 @@
 # Javascript Library App
 
-A small library project from 'The Odin Project'. This app makes use of Javascript objects as well as data attributes to add, edit, and remove Books to and from the Kwonsonian Library. I am using Firebase for the backend database.
+A small library project from 'The Odin Project'. This app makes use of Javascript objects, Factory functions, as well as data attributes to add, edit, and remove Books to and from the Firebase backend database.
 
 Something I learned coding this project:
 
