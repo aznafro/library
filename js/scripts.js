@@ -27,107 +27,104 @@ let addButton = document.querySelector(".btn-add");
 let header = document.querySelector(".header");
 let screen = document.querySelector(".screen");
 
-let database = firebase.database();
+const database = firebase.database();
+database.ref("books/").off();
 
 /*********************************
 
 		BOOK ELEMENT OBJECT
 
 *********************************/
-function BookElement() {
+class BookElement {
 
-}
+	constructor (bookId, title, author, pages, read, synopsis, delay) {
+		let bookEl = document.createElement("div");
+		let article = document.createElement("article");
+		let titleEl = document.createElement("h3");
+		let pagesEl = document.createElement("p");
+		let authorEl = document.createElement("p");
+		let extraInfoBar = document.createElement("div");
+		let readEl = document.createElement("p");
+		let menuBox = document.createElement("div");
+		let menuIcon = document.createElement("i");
+		let menuEl = document.createElement("div");
+		let list = document.createElement("ul");
+		let updateEl = document.createElement("li");
+		let updateLink = document.createElement("a");
+		let removeEl = document.createElement("li");
+		let removeLink = document.createElement("a");
+		let synopsisEl = document.createElement("p");
 
-// static variable used for the animation delay
-BookElement.delay = 0;
+		bookEl.classList.add("track-sm-1-2");
+		bookEl.classList.add("track-md-1-3");
+		bookEl.classList.add("track-lg-1-4");
 
-BookElement.prototype.create = (bookId, book) => {
-	let bookEl = document.createElement("div");
-	let article = document.createElement("article");
-	let titleEl = document.createElement("h3");
-	let pagesEl = document.createElement("p");
-	let authorEl = document.createElement("p");
-	let extraInfoBar = document.createElement("div");
-	let readEl = document.createElement("p");
-	let menuBox = document.createElement("div");
-	let menuIcon = document.createElement("i");
-	let menuEl = document.createElement("div");
-	let list = document.createElement("ul");
-	let updateEl = document.createElement("li");
-	let updateLink = document.createElement("a");
-	let removeEl = document.createElement("li");
-	let removeLink = document.createElement("a");
-	let synopsisEl = document.createElement("p");
+		let dataIdAtt = document.createAttribute("data-id");
+		dataIdAtt.value = bookId;
+		bookEl.setAttributeNode(dataIdAtt);
 
-	bookEl.classList.add("track-sm-1-2");
-	bookEl.classList.add("track-md-1-3");
-	bookEl.classList.add("track-lg-1-4");
+		article.classList.add("book");
+		article.style.animationDelay = delay + "s";
+		BookElement.delay += .1;
 
-	let dataIdAtt = document.createAttribute("data-id");
-	dataIdAtt.value = bookId;
-	bookEl.setAttributeNode(dataIdAtt);
+		titleEl.classList.add("title");
+		titleEl.textContent = title;
 
-	article.classList.add("book");
-	article.style.animationDelay = BookElement.delay + "s";
-	BookElement.delay += .1;
+		pagesEl.classList.add("pages");
+		pagesEl.textContent = pages + " pgs";
 
-	titleEl.classList.add("title");
-	titleEl.textContent = book.title;
+		authorEl.classList.add("author");
+		authorEl.textContent = author;
 
-	pagesEl.classList.add("pages");
-	pagesEl.textContent = book.pages + " pgs";
+		extraInfoBar.classList.add("extra-info-bar");
 
-	authorEl.classList.add("author");
-	authorEl.textContent = book.author;
+		readEl.classList.add("read");
+		readEl.textContent = read;
 
-	extraInfoBar.classList.add("extra-info-bar");
+		menuBox.classList.add("menu-box");
 
-	readEl.classList.add("read");
-	readEl.textContent = book.read;
+		menuIcon.classList.add("fas");
+		menuIcon.classList.add("fa-ellipsis-h");
 
-	menuBox.classList.add("menu-box");
+		menuEl.classList.add("menu");
 
-	menuIcon.classList.add("fas");
-	menuIcon.classList.add("fa-ellipsis-h");
+		updateEl.classList.add("nav-item");
+		updateLink.classList.add("nav-link");
+		updateLink.classList.add("update");
+		updateLink.textContent = "Update";
 
-	menuEl.classList.add("menu");
+		removeEl.classList.add("nav-item");
+		removeLink.classList.add("nav-link");
+		removeLink.classList.add("remove");
+		removeLink.textContent = "Remove";
 
-	updateEl.classList.add("nav-item");
-	updateLink.classList.add("nav-link");
-	updateLink.classList.add("update");
-	updateLink.textContent = "Update";
+		synopsisEl.classList.add("synopsis");
+		synopsisEl.textContent = synopsis;
 
-	removeEl.classList.add("nav-item");
-	removeLink.classList.add("nav-link");
-	removeLink.classList.add("remove");
-	removeLink.textContent = "Remove";
+		updateEl.appendChild(updateLink);
+		removeEl.appendChild(removeLink);
+		list.appendChild(updateEl);
+		list.appendChild(removeEl);
+		menuEl.appendChild(list);
 
-	synopsisEl.classList.add("synopsis");
-	synopsisEl.textContent = book.synopsis;
+		menuBox.appendChild(menuIcon);
+		menuBox.appendChild(menuEl);
 
-	updateEl.appendChild(updateLink);
-	removeEl.appendChild(removeLink);
-	list.appendChild(updateEl);
-	list.appendChild(removeEl);
-	menuEl.appendChild(list);
+		extraInfoBar.appendChild(readEl);
+		extraInfoBar.appendChild(menuBox);
 
-	menuBox.appendChild(menuIcon);
-	menuBox.appendChild(menuEl);
+		article.appendChild(titleEl);
+		article.appendChild(pagesEl);
+		article.appendChild(authorEl);
+		article.appendChild(extraInfoBar);
+		article.appendChild(synopsisEl);
 
-	extraInfoBar.appendChild(readEl);
-	extraInfoBar.appendChild(menuBox);
+		bookEl.appendChild(article);
 
-	article.appendChild(titleEl);
-	article.appendChild(pagesEl);
-	article.appendChild(authorEl);
-	article.appendChild(extraInfoBar);
-	article.appendChild(synopsisEl);
+		this.bookEl = bookEl;
 
-	bookEl.appendChild(article);
-
-	this.bookEl = bookEl;
-
-	return bookEl;
+		return bookEl;
+	}
 }
 
 /****************************************
@@ -168,33 +165,28 @@ removeNo.addEventListener("click", function() {
 			ADD BOOK
 
 *****************************/
+// prevent form from refreshing the page
+form.addEventListener("submit", function(e) {
+	e.preventDefault();
 
-// model listener for add
-let booksRef = database.ref("books/");
-booksRef.on('child_added', function(book) {
-	renderHelper(book.key, book.val());
-});
-
-function writeBook(title, author, pages, read, synopsis) {
+	let addRead = addContainer.querySelector("[type=\"radio\"]:checked");
 	let id = database.ref().push().key;
+	let title = addTitle.value;
+	let author = addAuthor.value;
+	let pages = addPages.value;
+	let read = addRead.value;
+	let synopsis = addSynopsis.value;
 
- 	database.ref("books/" + id).set({
+	// update model
+	database.ref("books/" + id).set({
 	    title: title,
 	    author: author,
 	    pages: pages,
 	    read: read,
 	    synopsis: synopsis
   	});
-}
 
-// prevent form from refreshing the page
-form.addEventListener("submit", function(e) {
-	e.preventDefault();
-
-	let addRead = addContainer.querySelector("[type=\"radio\"]:checked");
-
-	// update model
-	writeBook(addTitle.value, addAuthor.value, addPages.value, addRead.value, addSynopsis.value);
+  	renderHelper(id, title, author, pages, read, synopsis, 0);
 
 	// reset
 	addTitle.value = "";
@@ -207,8 +199,8 @@ form.addEventListener("submit", function(e) {
 });
 
 // Render Books into list
-function renderHelper(bookId, book) {
-	let bookEl = new BookElement().create(bookId, book);
+function renderHelper(bookId, title, author, pages, read, synopsis, delay) {
+	let bookEl = new BookElement(bookId, title, author, pages, read, synopsis, delay);
 	attachMenuEventListeners(bookEl);
 	booksList.appendChild(bookEl);
 }
@@ -218,20 +210,11 @@ function renderHelper(bookId, book) {
 		REMOVE BOOK
 
 ************************/
-
-// model listener for remove
-booksRef.on('child_removed', function(book) {
-	// update ui
-  	currentBookEl.remove();
-});
-
-function removeBook(id) {
-	database.ref("books/" + id).remove();
-}
-
 function remove() {
-	// update model
-	removeBook(currentBookEl.getAttribute("data-id"));
+	let id = currentBookEl.getAttribute("data-id");
+
+	database.ref("books/" + id).remove();
+	currentBookEl.remove();
 	hideContainer(removeContainer);
 }
 removeConfirm.addEventListener("click", remove);
@@ -241,32 +224,30 @@ removeConfirm.addEventListener("click", remove);
 		UPDATE BOOK
 
 ***************************/
+function update() {
+	let id = currentBookEl.getAttribute("data-id");
+	
+	// update model, listener will update view
+	let title = updateTitle.value;
+	let author = updateAuthor.value;
+	let pages = updatePages.value;
+	let read = updateRead.value;
+	let synopsis = updateSynopsis.value;
 
-// model listener for update
-booksRef.on('child_changed', function(book) {
-	// update view
-	currentBookEl.querySelector(".title").textContent = book.title;
-	currentBookEl.querySelector(".author").textContent = book.author;
-	currentBookEl.querySelector(".pages").textContent = book.pages + " pgs";
-	currentBookEl.querySelector(".read").textContent = book.read;
-	currentBookEl.querySelector(".synopsis").textContent = book.synopsis;
-});
-
-function updateBook(id, title, author, pages, read, synopsis) {
- 	database.ref("books/" + id).update({
-	    title: title,
+	database.ref("books/" + id).update({
+	    title: updateTitle.value,
 	    author: author,
 	    pages: pages,
 	    read: read,
 	    synopsis: synopsis
   	});
-}
 
-function update() {
-	let id = currentBookEl.getAttribute("data-id");
-	
-	// update model, listener will update view
-	updateBook(id, updateTitle.value, updateAuthor.value, updatePages.value, updateRead.value, updateSynopsis.textContent);
+  	currentBookEl.querySelector(".title").textContent = title;
+	currentBookEl.querySelector(".author").textContent = author;
+	currentBookEl.querySelector(".pages").textContent = pages + " pgs";
+	currentBookEl.querySelector(".read").textContent = read;
+	currentBookEl.querySelector(".synopsis").textContent = synopsis;
+
 	hideContainer(updateContainer);
 }
 updateConfirm.addEventListener("click", update);
@@ -283,7 +264,7 @@ function attachMenuEventListeners(bookEl) {
 		bookEl.querySelector(".menu").classList.toggle("menu-show");
 	});
 
-	// delete
+	// remove
 	bookEl.querySelector(".remove").addEventListener("click", function() {
 		let title = bookEl.querySelector(".title").textContent;
 		removeText.textContent = "Are you sure you want to remove '" + title + "'?";
@@ -345,3 +326,18 @@ function unblur() {
 	addButton.classList.remove("blur");
 	header.classList.remove("blur");
 }
+
+(function() {
+	let query = database.ref("books").orderByChild("title");
+	query.on("value", snapshot => {
+		let books = snapshot.val();
+		let delay = 0;
+		for(let key in books) {
+			if(books.hasOwnProperty(key)) {
+				let book = books[key];
+				renderHelper(key, book.title, book.author, book.pages, book.read, book.synopsis, delay);
+				delay += .2;
+			}
+		}
+	});
+})();
