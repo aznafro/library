@@ -75,6 +75,7 @@ body {
 	z-index: 3;
 	border-radius: 5px;
 	text-align: center;
+	background-color: rgba(0, 0, 0, 0.4);
 	border: 15px solid #fff;
 	transition: 1s;
 }
